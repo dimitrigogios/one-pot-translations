@@ -1,0 +1,32 @@
+{
+    "name": "mortendhansen/one-pot-translations",
+    "description": "Not so fancy translations to be managed by the users",
+    "type": "library",
+    "require": {
+        "illuminate/support": "^9.26"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "orchestra/testbench": "^7.7"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mortendhansen\\OnePotTranslations\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MortenDHansen\\OnePotTranslations\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Morten D. Hansen",
+            "email": "morten@visia.dk"
+        }
+    ],
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
