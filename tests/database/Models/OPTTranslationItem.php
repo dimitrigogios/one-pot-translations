@@ -15,13 +15,4 @@ class OPTTranslationItem extends \Mortendhansen\OnePotTranslations\Models\OPTTra
     {
         return OPTTranslationItemFactory::new();
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (\Mortendhansen\OnePotTranslations\Models\OPTTranslationItem $item) {
-
-        });
-    }
 }

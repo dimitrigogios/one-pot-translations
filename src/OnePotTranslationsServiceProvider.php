@@ -7,8 +7,8 @@ class OnePotTranslationsServiceProvider extends \Illuminate\Support\ServiceProvi
 
     public function register()
     {
-        $this->app->singleton('optranslator', function ($app) {
-            return new OnePotTranslator($app['config']['app.locale'], $app['config']['app.fallback_locale']);
+        $this->app->singleton('opTranslator', function ($app) {
+            return new OnePotTranslator($app['config']['app.fallback_locale']);
         });
     }
 

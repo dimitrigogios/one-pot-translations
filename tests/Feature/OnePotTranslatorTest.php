@@ -4,6 +4,8 @@ namespace MortenDHansen\OnePotTranslations\Tests\Feature;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 use Mortendhansen\OnePotTranslations\OnePotTranslator;
 use MortenDHansen\OnePotTranslations\Tests\database\Models\OPTTranslationItem;
 
@@ -39,5 +41,32 @@ class OnePotTranslatorTest extends \MortenDHansen\OnePotTranslations\Tests\TestC
         $this->assertArrayHasKey($item->key, $all['local']);
         $this->assertEquals($item->value, $all['local'][$item->key]);
         $this->assertEquals($item->value, $opt->get($item->key));
+    }
+
+    public function test_it_creates_missing_key()
+    {
+        $this->assertDatabaseCount('opt_translation_items', 0);
+        opt('my string is here');
+        $this->assertDatabaseCount('opt_translation_items', 1);
+    }
+
+    public function test_it_creates_missing_key_in_fallback_language()
+    {
+        App::setLocale('pl');
+        $this->assertDatabaseCount('opt_translation_items', 0);
+        $this->assertEquals('pl', App::currentLocale());
+
+        opt('my string is here');
+
+        $this->assertDatabaseHas('opt_translation_items', [
+            'key' => Str::slug('my string is here'),
+            'locale' => 'pl'
+        ]);
+
+        $this->assertDatabaseHas('opt_translation_items', [
+            'key' => Str::slug('my string is here'),
+            'locale' => 'en'
+        ]);
+
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Mortendhansen\OnePotTranslations\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class OPTTranslationItem extends \Illuminate\Database\Eloquent\Model
 {
 
@@ -12,4 +14,9 @@ class OPTTranslationItem extends \Illuminate\Database\Eloquent\Model
         'value',
         'locale'
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+    }
 }
