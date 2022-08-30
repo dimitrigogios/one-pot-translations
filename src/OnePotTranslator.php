@@ -4,11 +4,14 @@ namespace Mortendhansen\OnePotTranslations;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Mortendhansen\OnePotTranslations\Models\OPTTranslationItem;
 
 class OnePotTranslator
 {
+
+    const OPT_CACHE_KEY_PREFIX = 'opt-items-';
 
     public string $fallbackLocale;
 
@@ -49,9 +52,13 @@ class OnePotTranslator
      */
     public function all(): array
     {
-        /** @var Collection $allItems */
-        $allItems = OPTTranslationItem::where('locale', App::currentLocale())->get(['key', 'value']);
-        $allFallbackItems = OPTTranslationItem::where('locale', $this->fallbackLocale)->get(['key', 'value']);
+        $allItems = Cache::remember(self::OPT_CACHE_KEY_PREFIX . App::currentLocale(), 3600, function () {
+            return OPTTranslationItem::where('locale', App::currentLocale())->get(['key', 'value']);
+        });
+
+        $allFallbackItems = Cache::remember(self::OPT_CACHE_KEY_PREFIX . $this->fallbackLocale, 3600, function () {
+            return OPTTranslationItem::where('locale', $this->fallbackLocale)->get(['key', 'value']);
+        });
 
         return [
             'local' => $allItems->pluck('value', 'key'),
