@@ -21,7 +21,15 @@ class OPTTranslationItem extends \Illuminate\Database\Eloquent\Model
     {
         parent::boot();
 
-        static::saved(function (OPTTranslationItem $item) {
+        static::created(function (OPTTranslationItem $item) {
+            Cache::forget(OnePotTranslator::OPT_CACHE_KEY_PREFIX . $item->locale);
+        });
+
+        static::updated(function (OPTTranslationItem $item) {
+            Cache::forget(OnePotTranslator::OPT_CACHE_KEY_PREFIX . $item->locale);
+        });
+
+        static::deleted(function (OPTTranslationItem $item) {
             Cache::forget(OnePotTranslator::OPT_CACHE_KEY_PREFIX . $item->locale);
         });
     }
