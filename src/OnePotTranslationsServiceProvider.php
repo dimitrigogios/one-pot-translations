@@ -4,6 +4,14 @@ namespace Mortendhansen\OnePotTranslations;
 
 class OnePotTranslationsServiceProvider extends \Illuminate\Support\ServiceProvider
 {
+
+    public function register()
+    {
+        $this->app->singleton('optranslator', function ($app) {
+            return new OnePotTranslator($app['config']['app.locale'], $app['config']['app.fallback_locale']);
+        });
+    }
+
     public function boot()
     {
         if ($this->app->runningInConsole()) {

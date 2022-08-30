@@ -13,7 +13,10 @@
     "autoload": {
         "psr-4": {
             "Mortendhansen\\OnePotTranslations\\": "src/"
-        }
+        },
+        "files": [
+            "src/OPT.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
