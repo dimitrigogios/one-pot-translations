@@ -27,7 +27,7 @@ class OnePotTranslator
         $keySlug = Str::slug($key);
 
         if(!$this->all()['local']->has($keySlug)) {
-            OPTTranslationItem::create([
+            OPTTranslationItem::firstOrCreate([
                 'locale' => App::currentLocale(),
                 'key' => $keySlug
             ]);
