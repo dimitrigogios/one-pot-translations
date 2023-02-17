@@ -11,6 +11,8 @@ use Mortendhansen\OnePotTranslations\Models\OPTTranslationItem;
 class OnePotTranslator
 {
 
+    public $loaded = [];
+
     const OPT_CACHE_KEY_PREFIX = 'opt-items-';
 
     public string $fallbackLocale;
@@ -52,6 +54,10 @@ class OnePotTranslator
      */
     public function all(): array
     {
+        if(!empty($this->loaded)) {
+            return $this->loaded;
+        }
+
         $allItems = Cache::remember(self::OPT_CACHE_KEY_PREFIX . App::currentLocale(), 3600, function () {
             return OPTTranslationItem::where('locale', App::currentLocale())->get(['key', 'value']);
         });
@@ -60,9 +66,11 @@ class OnePotTranslator
             return OPTTranslationItem::where('locale', $this->fallbackLocale)->get(['key', 'value']);
         });
 
-        return [
-            'local' => $allItems->pluck('value', 'key'),
+        $this->loaded = [
+            'local'    => $allItems->pluck('value', 'key'),
             'fallback' => $allFallbackItems->pluck('value', 'key')
         ];
+
+        return $this->loaded;
     }
 }
