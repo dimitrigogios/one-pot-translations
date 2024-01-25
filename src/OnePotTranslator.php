@@ -29,7 +29,8 @@ class OnePotTranslator
         if(!$this->all()['local']->has($keySlug)) {
             OPTTranslationItem::firstOrCreate([
                 'locale' => App::currentLocale(),
-                'key' => $keySlug
+                'key' => $keySlug,
+                'value' => $this->fallbackLocale == App::currentLocale() ? $key : null
             ]);
         }
 
@@ -39,7 +40,7 @@ class OnePotTranslator
             $string = $this->all()['fallback']->get($keySlug, $key);
         }
 
-        if(!$this->all()['fallback']->has($keySlug) && $this->fallbackLocale != App::currentLocale()) {
+        if(!$this->all()['fallback']->has($keySlug)) {
             OPTTranslationItem::firstOrCreate([
                 'key' => $keySlug,
                 'locale' => $this->fallbackLocale,
