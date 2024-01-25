@@ -50,7 +50,7 @@ class OnePotTranslatorTest extends \MortenDHansen\OnePotTranslations\Tests\TestC
         $this->assertDatabaseCount('opt_translation_items', 1);
     }
 
-    public function test_it_creates_missing_key_in_fallback_language()
+    public function test_it_creates_missing_key_value_in_fallback_language()
     {
         App::setLocale('pl');
         $this->assertDatabaseCount('opt_translation_items', 0);
@@ -65,7 +65,8 @@ class OnePotTranslatorTest extends \MortenDHansen\OnePotTranslations\Tests\TestC
 
         $this->assertDatabaseHas('opt_translation_items', [
             'key' => Str::slug('my string is here'),
-            'locale' => 'en'
+            'locale' => 'en',
+            'value' => 'my string is here'
         ]);
 
     }
