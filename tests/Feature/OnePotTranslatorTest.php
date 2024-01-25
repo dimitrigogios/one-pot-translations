@@ -56,17 +56,17 @@ class OnePotTranslatorTest extends \MortenDHansen\OnePotTranslations\Tests\TestC
         $this->assertDatabaseCount('opt_translation_items', 0);
         $this->assertEquals('pl', App::currentLocale());
 
-        opt('my string is here');
+        opt('My string is here?');
 
         $this->assertDatabaseHas('opt_translation_items', [
-            'key' => Str::slug('my string is here'),
+            'key' => Str::slug('My string is here?'),
             'locale' => 'pl'
         ]);
 
         $this->assertDatabaseHas('opt_translation_items', [
-            'key' => Str::slug('my string is here'),
+            'key' => Str::slug('My string is here?'),
             'locale' => 'en',
-            'value' => 'my string is here'
+            'value' => 'My string is here?'
         ]);
 
     }
