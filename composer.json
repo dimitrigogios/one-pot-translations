@@ -3,7 +3,7 @@
     "description": "Not so fancy translations to be managed by the users",
     "type": "library",
     "require": {
-        "illuminate/support": "^9.26",
+        "illuminate/support": "^9.26|^10.0",
         "php": "7.4|8.*"
     },
     "require-dev": {
