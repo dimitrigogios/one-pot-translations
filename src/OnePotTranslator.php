@@ -27,11 +27,14 @@ class OnePotTranslator
         $keySlug = Str::slug($key);
 
         if(!$this->all()['local']->has($keySlug)) {
-            OPTTranslationItem::firstOrCreate([
-                'locale' => App::currentLocale(),
-                'key' => $keySlug,
-                'value' => $this->fallbackLocale == App::currentLocale() ? $key : null
-            ]);
+            try {
+                OPTTranslationItem::firstOrCreate([
+                    'locale' => App::currentLocale(),
+                    'key' => $keySlug,
+                    'value' => $this->fallbackLocale == App::currentLocale() ? $key : null
+                ]);
+            } catch (\Exception $exception) {
+            }
         }
 
         $string = $this->all()['local']->get($keySlug);
@@ -41,11 +44,14 @@ class OnePotTranslator
         }
 
         if(!$this->all()['fallback']->has($keySlug)) {
-            OPTTranslationItem::firstOrCreate([
-                'key' => $keySlug,
-                'locale' => $this->fallbackLocale,
-                'value' => $key
-            ]);
+            try {
+                OPTTranslationItem::firstOrCreate([
+                    'key' => $keySlug,
+                    'locale' => $this->fallbackLocale,
+                    'value' => $key
+                ]);
+            } catch (\Exception $exception) {
+            }
         }
 
         return is_null($string) ? $key : $string;
