@@ -22,22 +22,27 @@ class OnePotTranslator
         $this->fallbackLocale = $fallbackLocale;
     }
 
-    public function get(string $key): string
+    public function get(string $key, $locale = null): string
     {
         $keySlug = Str::slug($key);
 
-        if(!$this->all()['local']->has($keySlug)) {
-            try {
-                OPTTranslationItem::firstOrCreate([
-                    'locale' => App::currentLocale(),
-                    'key' => $keySlug,
-                    'value' => $this->fallbackLocale == App::currentLocale() ? $key : null
-                ]);
-            } catch (\Exception $exception) {
-            }
+        $useLocale = App::currentLocale();
+        if (!is_null($locale)) {
+            $useLocale = $locale;
         }
 
-        $string = $this->all()['local']->get($keySlug);
+        if(!$this->all($locale)['local']->has($keySlug)) {
+            try {
+                OPTTranslationItem::firstOrCreate([
+                    'locale' => $useLocale,
+                    'key' => $keySlug
+                ], [
+                    'value' => $this->fallbackLocale == $useLocale ? $key : null
+                ]);
+            } catch (\Exception $exception) {}
+        }
+
+        $string = $this->all($locale)['local']->get($keySlug);
 
         if(is_null($string)) {
             $string = $this->all()['fallback']->get($keySlug, $key);
@@ -48,6 +53,7 @@ class OnePotTranslator
                 OPTTranslationItem::firstOrCreate([
                     'key' => $keySlug,
                     'locale' => $this->fallbackLocale,
+                ], [
                     'value' => $key
                 ]);
             } catch (\Exception $exception) {
@@ -60,14 +66,19 @@ class OnePotTranslator
     /**
      * @return Collection[]
      */
-    public function all(): array
+    public function all($locale = null): array
     {
         if(!empty($this->loaded)) {
             return $this->loaded;
         }
 
+        $useLocale = App::currentLocale();
+        if (!is_null($locale)) {
+            $useLocale = $locale;
+        }
+
         $allItems = Cache::remember(self::OPT_CACHE_KEY_PREFIX . App::currentLocale(), 3600, function () {
-            return OPTTranslationItem::where('locale', App::currentLocale())->get(['key', 'value']);
+            return OPTTranslationItem::where('locale', )->get(['key', 'value']);
         });
 
         $allFallbackItems = Cache::remember(self::OPT_CACHE_KEY_PREFIX . $this->fallbackLocale, 3600, function () {
